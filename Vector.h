@@ -1,5 +1,5 @@
 #pragma once
-
+#include <cassert>
 
 //Points learned for developing big projects:
 // use "this" for all member variables
@@ -9,10 +9,11 @@ template<typename T> class Vector
 {
 private:
       T *data = nullptr;
+      size_t size,capacity;
       void ReAlloc(size_t newCapacity)
       {
             T* newBlock = new T[newCapacity];
-            
+
             if(newCapacity < this->size)
             {
                   this->size = newCapacity;
@@ -27,11 +28,19 @@ private:
       }
 
 public:
-      size_t size,capacity;
       Vector()
       {
             this->size = 0;
             ReAlloc(2);
+      }
+      Vector(size_t psize, T&& value)
+      {
+        this->size = psize;
+        this->capacity = (psize + psize/2);
+        delete[] this->data;
+        this->data = new T(capacity);
+        for(size_t i=0; i < psize; i++)
+          data[i]=value;
       }
       Vector(T para[],size_t psize)
       {
@@ -41,13 +50,17 @@ public:
                   this->data = para[i];
             }
       }
-      
+
+      size_t Size() const
+      {
+        return this->size;
+      }
       const T& operator[](size_t index) const
       {
             assert(index < this->size);
             return this->data[index];
       }
-      
+
       T& operator[](size_t index)
       {
             assert(index < this->size);
@@ -63,14 +76,14 @@ public:
             this->data[this->size] = std::move(value);
             this->size++;
       }
-      
+
       void PopBack()
       {
             assert(this->size > 0);
             this->size--;
             this->data[size].~T();
       }
-      
+
       void Clear()
       {
             for(size_t i = 0;i<this->size;i++)
@@ -80,5 +93,5 @@ public:
             this->size = 0;
       }
 
-      
+
 };
