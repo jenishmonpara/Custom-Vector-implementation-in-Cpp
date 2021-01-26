@@ -38,7 +38,7 @@ public:
         this->size = psize;
         this->capacity = (psize + psize/2);
         delete[] this->data;
-        this->data = new T(capacity);
+        this->data = new T[capacity];
         for(size_t i=0; i < psize; i++)
           data[i]=value;
       }
